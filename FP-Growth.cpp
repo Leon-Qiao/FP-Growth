@@ -61,14 +61,14 @@ public:
     }
 };
 
-vector<vector<char>> dataSet = {{'A','B'},
-                    {'B','C','D'},
-                    {'A','B','D'},
-                    {'A','D'},
-                    {'A','B','C'},
-                    {'A','E'},
-                    {'A','B','C','E'},
-                    {'F'}};
+vector<vector<char>> dataSet = {{'a','b','c','e'},
+                    {'c','d','e','h'},
+                    {'a','d','f','h'},
+                    {'a','h'},
+                    {'b','c','e'},
+                    {'a','b','f','h'},
+                    {'b','d','f','h'},
+                    {'c','f','g'}};
 int MinsupNum = Minsup * dataSet.size();
 vector<itemSet> L1;
 bool GreaterSort (itemSet a,itemSet b) { return (a.count>b.count); }
