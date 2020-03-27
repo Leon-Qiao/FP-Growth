@@ -1,11 +1,15 @@
 #include <iostream>
 #include <vector>
+#include <set>
+#include <cstring>
 using namespace std;
 
 const float Minsup = 0.25;
 struct itemSet{
     char name;
     int count;
+    vector<string> patternKey;
+    vector<int> patternCount;
 };
 class FP_Tree{
 public:
@@ -59,6 +63,22 @@ public:
                 break;
         }
     }
+    void PreOrderDFS(Node *seed,itemSet &aim){
+        if(seed){
+            if(seed->name==aim.name){
+                Node *temp = seed;
+                string key="";
+                while(temp->parent != _root){
+                    temp = temp->parent;
+                    key = temp->name + key;
+                }
+                aim.patternKey.push_back(key);
+                aim.patternCount.push_back(seed->count);
+            }
+            for(int i=0;i<seed->children.size();i++)
+                PreOrderDFS(seed->children[i], aim);
+        }
+    }
 };
 
 vector<vector<char>> dataSet = {{'a','b','c','e'},
@@ -81,7 +101,16 @@ int& scanD(const char c){
     L1.push_back(item);
     return L1[L1.size()-1].count;
 }
-
+/*
+void toPattern(itemSet item){
+    set<char> key[10];
+    for(int i=0;i<item.patternKey.size();i++){
+        for(int j=0;j<sizeof(item.patternKey[i]);j++){
+            key[i].
+        }
+    }
+}
+*/
 int main(){
     for(int i=0;i<dataSet.size();i++)
         for(int j=0;j<dataSet[i].size();j++)
@@ -94,6 +123,11 @@ int main(){
         else
             break;
     
+    cout<<"Show L1 Set:"<<endl;
+    for(int i=0;i<L1.size();i++)
+        cout<<L1[i].name<<L1[i].count<<" ";
+    cout<<endl;
+    
     FP_Tree::Node root;
     root.name = '-';
     root.count = 0;
@@ -101,8 +135,17 @@ int main(){
     for(int i=0;i<dataSet.size();i++)
         tree.findFromNode(tree._root, dataSet[i],0);
     
+    cout<<endl<<"Show Tree:"<<endl;
     tree.showTree();
+    cout<<endl;
     
-    
+    cout<<"Show patternKey:"<<endl;
+    for(int i=L1.size()-1;i>=0;i--){
+        tree.PreOrderDFS(tree._root,L1[i]);
+        cout<<L1[i].name<<":";
+        for(int j=0;j<L1[i].patternKey.size();j++)
+            cout<<L1[i].patternKey[j]<<L1[i].patternCount[j]<<" ";
+        cout<<endl;
+    }
     return 0;
 }
